@@ -1,0 +1,9 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Verify email')}"></head>
+<body><header th:replace="~{fragments/layout :: nav}"></header>
+<main class="auth-shell"><div class="container auth-layout"><aside class="auth-aside"><span class="eyebrow">ACCOUNT SECURITY</span><h1>Stay in control of your CholoBodlai account.</h1><p>Your email is used for secure account recovery and verification.</p><div class="auth-perks"><span>✓ Expiring links</span><span>✓ One-time use</span><span>✓ Passwords never sent by email</span></div></aside><section class="auth-panel">
+<span class="section-eyebrow">EMAIL VERIFICATION</span><h2>Need a new verification link?</h2>
+<p class="muted">We'll send a link to the email you registered with. Your account can log in after verification (and admin approval for truck owners).</p>
+<div class="alert alert-success" th:if="${param.sent}">If your email still needs verification, a link has been sent or placed in the local demo inbox.</div>
+<form th:action="@{/resend-verification}" method="post"><div class="form-field"><label for="email">Registered email</label><input type="email" id="email" name="email" required maxlength="180"></div><button class="btn btn-primary btn-full">Send verification link →</button></form><div th:if="${param.mailUnavailable}" class="alert alert-warning">Your account was saved, but the verification email could not be sent. Please try resending after the mail service is configured.</div>
+<p class="support-note"><a th:href="@{/login}">Back to login</a></p>
+</section></div></main></body></html>

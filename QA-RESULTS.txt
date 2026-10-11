@@ -1,0 +1,49 @@
+CHOLOBODLAI V5 — BUILD & QA REPORT
+===============================
+Design: D — dark Night Drive public site + light Dispatch Desk dashboards
+Date: 2026-10-12
+
+EXECUTED HERE
+-------------
+PASS — 111 Java application/test source files parsed by JDK21 Java compiler API (syntax only; does not resolve dependencies).
+PASS — Java marketplace validation/access smoke: 30 assertions (registration name/phone/password/email/vehicle IDs, bid bounds, reviews, search/status and role permissions).
+PASS — Node JavaScript scroll regressions (5): same-page GET filter, same-page POST, reload, cross-page navigation, query-string link.
+PASS — JavaScript syntax checks: site.js, tracking.js.
+PASS — CSS stylesheet parsed using tinycss2 (0 parser errors; 529 top-level rules).
+PASS — Maven pom.xml XML well-formed.
+PASS — 22 Thymeleaf HTML templates contain expected document structure.
+PASS — 21 application/marketing HTML templates statically rendered at 390px and 1280px (42 layout checks), no horizontal page overflow in headless Chromium.
+PASS — Static owner page shows Dispatch sidebar, homepage shows Night Drive, mobile sidebar opens/closes with no reported page JavaScript errors.
+PASS — No credentials embedded in src/main/resources/application.properties (Atlas URI obtained from environment at runtime).
+PASS — No destructive database migration or forced seeding in project defaults.
+
+TEST COVERAGE PROVIDED FOR YOUR LOCAL MACHINE
+---------------------------------------------
+JUnit: MarketplaceRulesTest (roles, validation, search/status), PickupTimePolicyTest (48-hour boundary), AccountEmailAccessTest, AccountRecoveryServiceTest, JwtServiceTest, CholoBodlaiApplicationTests (fares).
+Self-contained scripts: sh qa/run-policy-smoke.sh ; node qa/scroll-regression.test.cjs.
+Sample mockups: design-previews/home-desktop.png, owner-dashboard-desktop.png, home-mobile.png.
+
+NOT VERIFIED IN THIS ENVIRONMENT (IMPORTANT)
+--------------------------------------------
+- Full Maven compilation, JUnit runtime and full Spring Boot startup — Maven distribution/dependencies could not be downloaded from Maven Central here.
+- Real requests against your MongoDB Atlas account, simultaneous bid-accept race, SMTP email delivery and files in your local uploads directory.
+- Real network GET reloads in the sandbox Chromium (navigation is blocked by security policy). A mock-browser Node scroll regression suite executed instead.
+- Thymeleaf rendering with actual user data, as opposed to static template mocks for visual checks.
+
+REQUIRED LOCAL RELEASE GATE
+---------------------------
+1. IntelliJ → Maven → Lifecycle → test (or ./mvnw test with network access). Fix any compile or JUnit errors before presenting.
+2. Start Spring Boot and verify a stable Tomcat on port 8080 and Atlas connection.
+3. Log out; homepage and links work. Register shipper, verify email (demo mailbox or SMTP), then log in.
+4. Register owner with one truck; verify pending login blocked; admin approves; owner can access workspace.
+5. Confirm GET filter (pickup/destination/truck type) does not jump to top; check shipper filter and history similarly.
+6. Attempt out-of-range inputs (5000-char feedback, invalid phones, negative/huge amounts, old pickup time, cargo > capacity) and confirm server rejects them.
+7. As owner, submit bid twice to same trip, check one updated bid. Another owner cannot bid using that truck.
+8. As shipper, accept chosen bid; other offers close and winner's other active bids are withdrawn, while unrelated trips remain.
+9. Verify only the matched shipper/owner/admin can view accepted contact details, booking messages and receipt.
+10. Simulate tracking without real GPS; owner progresses pickup → in transit → delivered; shipper confirms completion.
+11. Check reviews with comment displayed on My Vehicle. Verify one review per completed booking and no 501-character text allowed.
+12. Check notifications, dispute submission/admin resolution, profile password/email changes, password reset, mobile menu and print layout.
+13. Before Render: set APP_MAIL_PREVIEW=false; add real SMTP, secure environment secrets, persistent uploads, APP_PUBLIC_BASE_URL and retest roles.
+
+V5 status: SOURCE-PACKAGED FOR INTELLIJ; NOT CLAIMED FULLY INTEGRATION-TESTED.

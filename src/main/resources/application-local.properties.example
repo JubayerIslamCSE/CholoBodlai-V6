@@ -1,0 +1,4 @@
+# Copy this file to application-local.properties and replace the placeholder.
+# This untracked private file is imported automatically by application.properties.
+# Or set MONGODB_URI in IntelliJ instead; do not use both unless you know which overrides.
+spring.mongodb.uri=mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/cholobodlai?retryWrites=true&w=majority

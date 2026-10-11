@@ -1,0 +1,57 @@
+CHOLOBODLAI V6 — RELEASE QA (2026-10-12)
+========================================
+
+EXECUTED IN CREATION ENVIRONMENT (NO LIVE ACCOUNT CONNECTIONS)
+--------------------------------------------------------------
+PASS 114 Java source/test files parsed with JDK 21 compiler API; no Java syntax errors.
+PASS Cloudinary fake-HTTP-server integration smoke: Basic-auth upload request,
+     public vehicle photo reference/URL, authenticated private registration document,
+     short-lived signed private document URL and asset deletion request.
+PASS Cloudinary SHA-1 request-signature sample checked against Python hashlib.
+PASS 30 standalone Java business-validation/access-policy assertions.
+PASS 5 Node.js scroll restoration regressions (same-page GET, POST, refresh, cross-page, query link).
+PASS site.js and tracking.js Node JavaScript syntax checks.
+PASS Maven pom.xml is well-formed XML.
+PASS render.yaml valid YAML, Docker/port/health-check settings present.
+PASS 22 Thymeleaf HTML templates have document structures; new photo/document form and admin review links exist.
+PASS CSS parsed with tinycss2 (0 parsing errors).
+PASS Source/config scanned for embedded live Atlas URI, Cloudinary secret and Resend API keys.
+PASS Cloudinary REST signing and email JSON text-escaping smoke checks using Java 21.
+PASS The old Atlas URI property ${MONGODB_URI} and local ${PORT:8080} behavior are retained.
+PASS Render will reject local-only uploads (APP_MEDIA_BACKEND=cloudinary required)
+     and reject public APP_MAIL_PREVIEW when RENDER is detected.
+
+NEW JUNIT SOURCE TESTS INCLUDED (NEED MAVEN EXECUTION IN GITHUB/INTELLIJ)
+------------------------------------------------------------------------
+- Service/CloudinaryMediaGatewayTest: upload authorization, public/private refs,
+  signed download URL, canonical signature, malformed ID rejection.
+- Service/EmailJsonFormattingTest: safe JSON encoding.
+- Existing MarketplaceRules/AccountEmailAccess/PickupTimePolicy/
+  AccountRecoveryService/JwtService/Trip fare tests retained.
+- GitHub Actions .github/workflows/ci.yml runs Maven tests and smoke scripts
+  on pushes and pull requests against main.
+
+NOT VERIFIED HERE — DO NOT SKIP BEFORE PUBLIC DEPLOYMENT
+------------------------------------------------------
+- Full Maven compilation and full JUnit test suite: Maven dependencies cannot be
+  downloaded within this environment.
+- Actual signed uploads to your Cloudinary account / account security policies.
+- Actual authenticated document download against Cloudinary (including PDF delivery).
+- Actual Resend email delivery and verified sender domain.
+- MongoDB Atlas connectivity, Render outbound network allowlisting, or real user data.
+- Live Render Docker build/start, memory usage on Free plan, and end-to-end role flow.
+- Live user-browser CSS/mobile testing on the deployed hostname; V5 static responsive
+  preview checks passed earlier but V6 live rollout requires re-test.
+
+DEPLOYMENT RELEASE GATE
+-----------------------
+1. After GitHub push, require green CI check (mvn test).
+2. Configure Render environment: MONGODB_URI, Cloudinary credentials, JWT secret,
+   admin settings, APP_MEDIA_BACKEND=cloudinary, APP_MAIL_PREVIEW=false,
+   APP_PUBLIC_BASE_URL, secure cookie; configure Resend for public registration.
+3. Atlas allows Render outbound IP ranges and Render logs remain Live.
+4. Register, verify email, admin-approve owner, upload photo, review private
+   registration document, and confirm media still works after redeployment.
+5. Place/update a bid, accept booking, review private messages, complete trip,
+   show written review, try filter scrolling and mobile menu.
+6. Never expose the local admin mail preview or database/Cloudinary/API secrets.

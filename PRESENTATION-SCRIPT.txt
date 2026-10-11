@@ -1,0 +1,17 @@
+CholoBodlai -- teacher demonstration script
+
+1. Homepage: Open http://localhost:8080/ before login. Explain public access and two audience sections.
+2. Register: Create a truck owner with one truck and unique email. Show that login waits for both email verification and admin approval.
+3. Admin: Open /admin/mail-preview with APP_MAIL_PREVIEW=true in an admin browser. Open the verification link. In /admin approve the owner and vehicle.
+4. Shipper: Request transport from Dhaka to Narayanganj with a truck type, load details, and pickup scheduled at least 48 hours ahead. Demonstrate that past dates are blocked.
+5. Owner: Browse available jobs, filter by truck type/destination, submit a bid, update the same bid with a second amount.
+6. Shipper: Accept the bid. Show the winner's phone and vehicle; contact sharing is restricted to participants.
+7. Delivery: Send a private message, open a printable receipt, and play the clearly labeled offline truck simulation. The simulated animation does not affect real trip status.
+8. Owner: Advance through pickup, in transit, and delivered. Shipper confirms completion and leaves a star rating + written review. Reopen the owner My Vehicle page to show the full customer feedback.
+9. Admin: Display statistics, notifications, dispute report and admin resolution.
+10. Security: Show Forgot Password request and the demo mailbox's one-time token. Briefly explain 15-minute expiry.
+11. Responsiveness: Resize browser to ~375px and open /trucks to show its styled responsive profile.
+
+Presentation note: Demo inbox is NOT an actual email provider, and tracking is NOT live GPS. Do not claim otherwise. Test on localhost before deploying to Render. No online payments are implemented.
+
+Navigation: On refresh or after posting from a detail page, the browser preserves the previous scroll position; successful review posting opens the reviews section.

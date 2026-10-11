@@ -1,0 +1,7 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Demo mail inbox')}"></head><body class="app-page"><header th:replace="~{fragments/layout :: nav}"></header>
+<main class="container dashboard-page"><div class="page-intro"><span class="eyebrow">LOCAL DEMO ONLY</span><h1>Mail delivery preview</h1><p>This private admin-only inbox shows verification and reset links when APP_MAIL_PREVIEW=true. These are not real delivered emails. Disable it before any public deployment.</p></div>
+<div class="alert alert-warning">Sensitive account links appear here. Use only with isolated demonstration accounts.</div>
+<section class="content-card"><div class="content-card-header"><h2>Recent demo messages</h2><span class="tag tag-light" th:text="${#lists.size(emails)} + ' messages'"></span></div>
+<div class="mail-preview-row" th:each="mail : ${emails}"><div><strong th:text="${mail.subject}"></strong><small th:text="${mail.createdAt}"></small><p th:text="${mail.address}"></p><p th:text="${mail.message}"></p></div><a class="btn btn-secondary btn-small" th:href="${mail.actionUrl}">Open secure link →</a></div>
+<p class="muted" th:if="${#lists.isEmpty(emails)}">No demo emails yet. Register a new account or request a password reset.</p></section>
+</main></body></html>

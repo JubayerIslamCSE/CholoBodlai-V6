@@ -1,0 +1,17 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Sign in')}"></head><body>
+<header th:replace="~{fragments/layout :: nav}"></header>
+<main class="auth-shell"><div class="container auth-layout"><aside class="auth-aside"><span class="eyebrow">WELCOME BACK</span><h1>Your next move is waiting.</h1><p>Manage trips, bids, vehicle approvals and deliveries—all from your CholoBodlai account.</p><div class="auth-perks"><span>✓ All your bookings in one place</span><span>✓ Keep track of your offers</span><span>✓ Stay connected through every trip</span></div></aside>
+<section class="auth-panel"><span class="section-eyebrow">YOUR ACCOUNT</span><h2>Sign in</h2><p class="muted">New here? <a th:href="@{/register}">Create an account</a></p>
+<div class="alert alert-danger" th:if="${param.error}">Incorrect credentials or this account is waiting for approval.</div>
+<div class="alert alert-success" th:if="${param.registered}">Account registered. Sign in to continue.</div>
+<div class="alert alert-warning" th:if="${param.verifyEmail}">Check your email verification link before signing in. In local demo mode, an administrator can open the private demo mail inbox.</div>
+<div class="alert alert-warning" th:if="${param.pendingVerify}">Your truck account is pending administrator approval AND email verification.</div>
+<div class="alert alert-success" th:if="${param.resetSuccess}">Password reset complete. Sign in with the new password.</div>
+<div class="alert alert-warning" th:if="${param.pending}">Thanks for registering! Your truck account is awaiting admin approval.</div>
+<div class="alert alert-success" th:if="${param.passwordChanged}">Password updated. Please sign in again.</div>
+<div class="alert alert-warning" th:if="${param.disabled}">Your session ended. Please sign in again or contact the administrator.</div>
+<form th:action="@{/login}" method="post"><div class="form-field"><label for="username">Phone number</label><input name="username" id="username" placeholder="01XXXXXXXXX" autocomplete="username" required maxlength="11"></div>
+<div class="form-field"><label for="password">Password</label><input name="password" id="password" type="password" placeholder="Enter your password" autocomplete="current-password" required maxlength="100"></div>
+<button class="btn btn-primary btn-full btn-large" type="submit">Sign in <span>↗</span></button></form>
+<p class="support-note"><a th:href="@{/forgot-password}">Forgot your password?</a> · <a th:href="@{/resend-verification}">Resend verification email</a></p></section></div></main></body></html>

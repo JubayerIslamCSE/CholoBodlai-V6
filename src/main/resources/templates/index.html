@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Freight moves forward')}"></head>
+<body class="marketing-page"><header th:replace="~{fragments/layout :: nav}"></header>
+<main>
+<section class="night-hero">
+  <div class="container night-inner">
+    <div class="night-copy">
+      <div class="night-chip"><span class="pulse-led"></span> CHOLOBODLAI <span class="chip-divider">/</span> FREIGHT REIMAGINED</div>
+      <h1>YOUR<br>FREIGHT.<br><span>YOUR<br class="small-screen-only"> MOVE.</span></h1>
+      <p>Move your goods on your terms. Publish a route, compare competitive offers and connect with verified truck owners—all in one connected workspace.</p>
+      <div class="night-actions">
+        <a sec:authorize="!isAuthenticated()" th:href="@{/register(role='SHIPPER')}" class="btn btn-highlight btn-large">BOOK A TRUCK <span>↗</span></a>
+        <a sec:authorize="hasAnyRole('SHIPPER','ADMIN')" th:href="@{/trips/new}" class="btn btn-highlight btn-large">REQUEST A TRUCK <span>↗</span></a>
+        <a sec:authorize="hasRole('OWNER')" th:href="@{/owner}" class="btn btn-highlight btn-large">FIND A DELIVERY <span>↗</span></a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/register(role='OWNER')}" class="btn btn-outline-light btn-large">EARN WITH YOUR TRUCK <span>→</span></a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}" class="btn btn-outline-light btn-large">OPERATIONS DESK <span>→</span></a>
+      </div>
+      <div class="night-trust"><span>01 / POST THE ROUTE</span><span>02 / COMPARE BIDS</span><span>03 / GET MOVING</span></div>
+    </div>
+    <div class="night-map" role="img" aria-label="Illustrated freight route, sample only, not live tracking">
+      <div class="night-map-grid"></div>
+      <div class="night-map-top"><span class="night-square">↗</span><div><small>FREIGHT DESK</small><strong>THE NEXT MOVE</strong></div><span class="night-map-id">01 / MAP PREVIEW</span></div>
+      <svg class="night-map-route" viewBox="0 0 640 495" aria-hidden="true">
+       <path class="night-road-track" d="M 62 370 C 170 355, 90 205, 223 213 S 298 422, 404 271 S 495 129, 584 103"/>
+       <path class="night-road-line" d="M 62 370 C 170 355, 90 205, 223 213 S 298 422, 404 271 S 495 129, 584 103"/>
+       <circle class="night-endpoint" cx="62" cy="370" r="11"/><circle class="night-endpoint" cx="584" cy="103" r="11"/>
+       <g class="night-truck-marker"><rect x="291" y="298" width="31" height="22" rx="4" fill="#c6f46e"/><rect x="317" y="305" width="18" height="15" rx="3" fill="#defcb1"/><circle cx="299" cy="322" r="5" fill="#0b1512"/><circle cx="326" cy="322" r="5" fill="#0b1512"/></g>
+      </svg>
+      <div class="night-map-card night-map-card-top"><small>TRIP REQUEST / EXAMPLE</small><strong>Dhaka → Chattogram</strong><span><i></i> OPEN FOR OFFERS</span></div>
+      <div class="night-map-card night-map-card-bottom"><small>YOU'RE IN CONTROL</small><strong>Compare. Choose. Move.</strong><span>TRANSPARENT BIDDING ↗</span></div>
+      <span class="night-map-caption">SCHEMATIC VISUAL · NOT LIVE GPS</span>
+    </div>
+  </div>
+  <div class="night-bottom container"><span><b>01</b> POST YOUR DELIVERY</span><span><b>02</b> OWN YOUR DECISION</span><span><b>03</b> CONNECT & MOVE</span><span>DESIGNED FOR <b>BANGLADESH ↗</b></span></div>
+</section>
+<section class="container night-audiences" id="get-started">
+ <div class="night-section-top"><span class="night-section-index">02 / TWO WAYS FORWARD</span><h2>EVERY LOAD<br>HAS A WAY.</h2><p>Whether you have cargo to move or a truck ready for work, we built a better way to find each other.</p></div>
+ <div class="night-role-grid">
+  <article class="night-role-card night-role-shipper"><span class="night-role-index">01 / FOR SHIPPERS</span><span class="night-role-graphic">↗</span><h3>NEED A<br>TRUCK?</h3><p>Tell us what, where and when. Get competitive bids from approved truck owners. You decide the best fit.</p><a sec:authorize="!isAuthenticated()" th:href="@{/register(role='SHIPPER')}">POST A TRIP <span>↗</span></a><a sec:authorize="hasAnyRole('SHIPPER','ADMIN')" th:href="@{/trips/new}">POST A TRIP <span>↗</span></a></article>
+  <article class="night-role-card night-role-owner"><span class="night-role-index">02 / FOR OWNERS</span><span class="night-role-graphic">▤</span><h3>TRUCK READY<br>FOR BUSINESS?</h3><p>Register your vehicle, get admin approval, browse available work, and bid on the loads that fit your truck.</p><a sec:authorize="!isAuthenticated()" th:href="@{/register(role='OWNER')}">JOIN AS OWNER <span>↗</span></a><a sec:authorize="hasAnyRole('OWNER','ADMIN')" th:href="@{/owner}">VIEW OPPORTUNITIES <span>↗</span></a></article>
+ </div>
+</section>
+<section class="night-explain"><div class="container"><div class="night-section-top"><span class="night-section-index">03 / NO GUESSWORK</span><h2>BUILT FOR THE<br>WAY THINGS MOVE.</h2></div><div class="night-step-grid"><article><span>01 / REQUEST</span><h3>Give us your route.</h3><p>Set pickup and destination, date, weight and truck type.</p></article><article><span>02 / OFFERS</span><h3>Choose on your terms.</h3><p>Truck owners place one editable offer per trip. Compare before choosing.</p></article><article><span>03 / DELIVERY</span><h3>Make the connection.</h3><p>Confirm an offer, communicate directly, and track job progress.</p></article></div></div></section>
+<section class="container night-final"><div><span>04 / THE ROAD AHEAD</span><h2>READY TO<br><em>MAKE MOVES?</em></h2><p>Your freight, your schedule, your terms. Start on CholoBodlai.</p></div><a sec:authorize="!isAuthenticated()" th:href="@{/register}" class="btn btn-highlight btn-large">JOIN THE NETWORK ↗</a><a sec:authorize="isAuthenticated()" th:href="@{/profile}" class="btn btn-highlight btn-large">GO TO WORKSPACE ↗</a></section>
+</main>
+<footer class="night-footer"><div class="container"><strong>CHOLO<span>BODLAI ↗</span></strong><span>© 2026 CHOLOBODLAI / BUILT FOR BANGLADESH</span><a href="#get-started">BACK TO TOP ↑</a></div></footer>
+</body></html>

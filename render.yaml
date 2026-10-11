@@ -1,0 +1,40 @@
+# Optional Render Blueprint. You can also use Render Dashboard > New > Web Service > Docker.
+# Never put real passwords or API secrets in this file.
+services:
+  - type: web
+    name: cholobodlai-v6
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /ping
+    envVars:
+      - key: PORT
+        value: '8080'
+      - key: APP_MEDIA_BACKEND
+        value: cloudinary
+      - key: APP_COOKIE_SECURE
+        value: 'true'
+      - key: APP_DEMO_SEED
+        value: 'false'
+      - key: APP_MAIL_PREVIEW
+        value: 'false'
+      - key: MONGODB_URI
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: APP_ADMIN_PHONE
+        sync: false
+      - key: APP_ADMIN_PASSWORD
+        sync: false
+      - key: APP_JWT_SECRET
+        sync: false
+      - key: APP_PUBLIC_BASE_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: APP_MAIL_FROM
+        sync: false

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101816"><meta name="referrer" content="same-origin">
+  <title th:text="${title} + ' | CholoBodlai'">CholoBodlai</title>
+  <link rel="icon" type="image/svg+xml" th:href="@{/images/mark.svg}">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script th:src="@{/js/site.js}" defer></script>
+</head>
+<body>
+<div class="site-chrome" th:fragment="nav">
+  <header class="site-header">
+    <div class="container header-wrap">
+      <a class="brand" th:href="@{/}" aria-label="CholoBodlai home">
+        <span class="brand-emblem" aria-hidden="true">↗</span><span>CHOLO<span class="brand-second">BODLAI</span></span>
+      </a>
+      <div class="header-utility"><span class="header-kicker" sec:authorize="isAuthenticated()">THE FREIGHT WORKSPACE <span aria-hidden="true">/</span> BANGLADESH</span>
+        <button class="mobile-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" aria-label="Open navigation"><span></span><span></span><span></span></button></div>
+      <nav class="header-links" id="main-navigation" aria-label="Main navigation">
+        <a th:href="@{/}" class="nav-primary">Home</a>
+        <a sec:authorize="hasRole('SHIPPER')" th:href="@{/shipper}" class="nav-primary">My bookings</a>
+        <a sec:authorize="hasRole('SHIPPER')" th:href="@{/trips/new}" class="nav-primary">Request a truck</a>
+        <a sec:authorize="hasRole('OWNER')" th:href="@{/owner}" class="nav-primary">Available jobs</a>
+        <a sec:authorize="hasRole('OWNER')" th:href="@{/trucks}" class="nav-primary">My vehicle</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}" class="nav-primary">Admin overview</a>
+        <a sec:authorize="hasRole('ADMIN')" th:if="${demoMailPreview}" th:href="@{/admin/mail-preview}" class="nav-primary">Demo mail</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/shipper}" class="nav-primary">Shipper view</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/owner}" class="nav-primary">Owner view</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/notifications}" class="nav-alert" aria-label="Notifications">
+          <span class="notice-symbol" aria-hidden="true">◉</span> <span class="nav-utility-label">Alerts</span><span class="unread-count" th:if="${unreadCount > 0}" th:text="${unreadCount}">0</span>
+        </a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/history}" class="nav-history">History</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/profile}" class="nav-profile">My profile</a>
+        <a class="nav-signin" sec:authorize="!isAuthenticated()" th:href="@{/login}">Sign in</a>
+        <a class="btn btn-small btn-primary nav-join" sec:authorize="!isAuthenticated()" th:href="@{/register}">Get started <span aria-hidden="true">↗</span></a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="nav-logout"><button class="btn btn-quiet btn-small" type="submit">Sign out ↗</button></form>
+      </nav>
+    </div>
+  </header>
+  <aside class="dispatch-rail" sec:authorize="isAuthenticated()" aria-label="Workspace navigation">
+    <div class="rail-brandline"><a th:href="@{/}" class="rail-brand" aria-label="CholoBodlai homepage"><span class="rail-mark">↗</span><span>CHOLO<b>BODLAI</b></span></a><button type="button" class="rail-close" aria-label="Close navigation">×</button></div>
+    <div class="rail-signal"><span class="rail-signal-dot"></span> LOCAL FREIGHT NETWORK <span class="rail-signal-arrow">↗</span></div>
+    <div class="rail-label">WORKSPACE <span>01</span></div>
+    <nav class="rail-links" aria-label="Role-based workspace">
+      <a sec:authorize="hasRole('SHIPPER')" th:href="@{/shipper}"><span class="rail-icon">▦</span><span>My bookings</span><span class="rail-edge">→</span></a>
+      <a sec:authorize="hasRole('SHIPPER')" th:href="@{/trips/new}"><span class="rail-icon">＋</span><span>Request a truck</span><span class="rail-edge">→</span></a>
+      <a sec:authorize="hasRole('OWNER')" th:href="@{/owner}"><span class="rail-icon">▤</span><span>Available jobs</span><span class="rail-edge">→</span></a>
+      <a sec:authorize="hasRole('OWNER')" th:href="@{/trucks}"><span class="rail-icon">▰</span><span>My vehicle</span><span class="rail-edge">→</span></a>
+      <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"><span class="rail-icon">▦</span><span>Admin overview</span><span class="rail-edge">→</span></a>
+      <a sec:authorize="hasRole('ADMIN')" th:href="@{/shipper}"><span class="rail-icon">↗</span><span>Shipper workspace</span><span class="rail-edge">→</span></a>
+      <a sec:authorize="hasRole('ADMIN')" th:href="@{/owner}"><span class="rail-icon">▤</span><span>Owner workspace</span><span class="rail-edge">→</span></a>
+      <a sec:authorize="hasRole('ADMIN')" th:if="${demoMailPreview}" th:href="@{/admin/mail-preview}"><span class="rail-icon">✉</span><span>Demo mailbox</span><span class="rail-edge">→</span></a>
+    </nav>
+    <div class="rail-label">MANAGEMENT <span>02</span></div>
+    <nav class="rail-links" aria-label="Account and activity">
+      <a th:href="@{/history}"><span class="rail-icon">◷</span><span>Booking history</span><span class="rail-edge">→</span></a>
+      <a th:href="@{/notifications}"><span class="rail-icon">◉</span><span>Notifications</span><span class="rail-edge">→</span></a>
+      <a th:href="@{/profile}"><span class="rail-icon">◎</span><span>My account</span><span class="rail-edge">→</span></a>
+      <a th:href="@{/}"><span class="rail-icon">⌂</span><span>Public homepage</span><span class="rail-edge">↗</span></a>
+    </nav>
+    <div class="rail-footer"><div class="rail-avatar" aria-hidden="true">CB</div><div><strong sec:authentication="principal.fullName">Signed in</strong><small>CONNECTED WORKSPACE</small></div><span class="rail-status">●</span></div>
+  </aside>
+  <div class="rail-backdrop" aria-hidden="true"></div>
+</div>
+</body></html>

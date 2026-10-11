@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My vehicle')}"></head>
+<body class="app-page">
+<header th:replace="~{fragments/layout :: nav}"></header>
+<main class="container dashboard-page">
+  <div class="page-intro intro-split">
+    <div>
+      <span class="eyebrow">YOUR TRANSPORT BUSINESS</span>
+      <h1>My registered vehicle.</h1>
+      <p>View truck details, availability, customer ratings and written feedback in one place.</p>
+    </div>
+    <a class="btn btn-secondary" th:href="@{/owner}">← Back to jobs</a>
+  </div>
+  <div class="alert alert-success" th:if="${param.photoUpdated}">Vehicle photo updated successfully.</div>
+  <div class="alert alert-warning" th:if="${param.documentUpdated}">Document saved. An administrator must verify the new document before this truck can bid again.</div>
+
+  <div class="vehicle-grid" th:if="${!#lists.isEmpty(trucks)}">
+    <article class="content-card vehicle-card" th:each="t : ${trucks}">
+      <div class="vehicle-photo">
+        <img th:if="${t.photoPath != null}" th:src="@{/trucks/{id}/photo(id=${t.id})}"
+             alt="Registered truck photo" loading="lazy">
+        <div th:if="${t.photoPath == null}" class="vehicle-photo-placeholder">
+          <span aria-hidden="true">▰</span>
+          <strong>Your truck, your business.</strong>
+          <small>Upload a vehicle photo for your profile</small>
+        </div>
+      </div>
+
+      <div class="content-card-header">
+        <div>
+          <span class="eyebrow">REGISTERED VEHICLE</span>
+          <h2 th:text="${t.registrationNo}">Vehicle registration</h2>
+          <p th:text="${t.truckTypeName} + ' · ' + ${t.categoryName}">Truck type</p>
+        </div>
+        <span class="tag" th:classappend="${t.verified ? ' tag-green' : ' tag-gold'}"
+              th:text="${t.verified ? 'Verified' : 'Pending approval'}">Status</span>
+      </div>
+
+      <div class="details-grid">
+        <div><small>Owner</small><strong th:text="${t.ownerName}">Owner</strong></div>
+        <div><small>Truck type</small><strong th:text="${t.truckTypeName}">Truck type</strong></div>
+        <div><small>Availability</small><strong th:text="${#strings.replace(t.status.name(), '_', ' ')}">Available</strong></div>
+        <div><small>Customer rating</small>
+          <strong th:text="${ratings[t.id] != null ? ratings[t.id] : 'No ratings yet'}">No ratings yet</strong>
+        </div>
+      </div>
+
+      <section class="customer-feedback" th:id="'reviews-' + ${t.id}" aria-label="Written customer reviews">
+        <div class="content-card-header feedback-heading">
+          <div>
+            <span class="eyebrow">CUSTOMER EXPERIENCE</span>
+            <h3>Customer reviews</h3>
+            <p>Feedback from shippers after their completed deliveries.</p>
+          </div>
+          <span class="tag tag-light" th:text="${#lists.size(reviewsByTruck[t.id])} + ' reviews'">0 reviews</span>
+        </div>
+        <div class="customer-review-list" th:if="${!#lists.isEmpty(reviewsByTruck[t.id])}">
+          <article class="customer-review" th:each="r : ${reviewsByTruck[t.id]}">
+            <div class="customer-review-top">
+              <span class="review-stars"><span aria-hidden="true">★</span>
+                <strong th:text="${r.stars} + ' / 5'">5 / 5</strong>
+              </span>
+              <time th:if="${r.createdAt != null}" th:text="${r.createdAt.toLocalDate()}">Date</time>
+            </div>
+            <p class="customer-review-comment"
+               th:text="${r.comment != null and !r.comment.isBlank() ? r.comment : 'This customer left a rating without a written description.'}">Feedback</p>
+            <span class="customer-review-author" th:text="'Reviewed by ' + ${r.authorName}">Reviewed by customer</span>
+          </article>
+        </div>
+        <div class="customer-feedback-empty" th:if="${#lists.isEmpty(reviewsByTruck[t.id])}">
+          No customer reviews yet. Reviews appear here after a shipper completes and rates a booking.
+        </div>
+      </section>
+
+      <form class="vehicle-photo-upload" th:if="${ownerView}"
+            th:action="@{/trucks/{id}/photo(id=${t.id})}" method="post" enctype="multipart/form-data">
+        <label th:for="'photo-' + ${t.id}">Update your vehicle photo (JPG/PNG, up to 5 MB)</label>
+        <input type="file" name="photo" th:id="'photo-' + ${t.id}" accept="image/png,image/jpeg" required>
+        <button class="btn btn-primary btn-small" type="submit">Save photo</button>
+      </form>
+      <form class="vehicle-photo-upload" th:if="${ownerView}"
+            th:action="@{/trucks/{id}/document(id=${t.id})}" method="post" enctype="multipart/form-data">
+        <label th:for="'doc-' + ${t.id}">Replace registration document (private PDF/JPG/PNG, max 5 MB)</label>
+        <p class="muted">Changing the document requires admin verification. Do not update it during an active delivery.</p>
+        <input type="file" name="document" th:id="'doc-' + ${t.id}" accept="application/pdf,image/png,image/jpeg" required>
+        <button class="btn btn-secondary btn-small" type="submit">Submit document</button>
+      </form>
+    </article>
+  </div>
+
+  <section class="content-card" th:if="${#lists.isEmpty(trucks)}">
+    <div class="empty-state">
+      <h2>No registered vehicle found</h2>
+      <p>Truck details are collected during owner account registration and reviewed by an administrator.</p>
+    </div>
+  </section>
+</main>
+</body>
+</html>

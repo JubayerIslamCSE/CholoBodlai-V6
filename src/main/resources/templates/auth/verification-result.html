@@ -1,0 +1,8 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Email verification')}"></head>
+<body><header th:replace="~{fragments/layout :: nav}"></header>
+<main class="auth-shell"><div class="container auth-layout"><aside class="auth-aside"><span class="eyebrow">ACCOUNT SECURITY</span><h1>Stay in control of your CholoBodlai account.</h1><p>Your email is used for secure account recovery and verification.</p><div class="auth-perks"><span>✓ Expiring links</span><span>✓ One-time use</span><span>✓ Passwords never sent by email</span></div></aside><section class="auth-panel">
+<span class="section-eyebrow">EMAIL SECURITY</span><h2 th:text="${verified ? 'Email verified!' : 'Link invalid or expired'}">Verification</h2>
+<p th:if="${verified}">Your email is confirmed. Shippers can now sign in; truck owners must also be approved by an admin.</p>
+<p th:unless="${verified}">This link is invalid, expired, or has already been used. Request a new link if your email still needs verification.</p>
+<div class="form-actions"><a class="btn btn-primary" th:href="@{/login}">Go to login</a><a class="btn btn-secondary" th:href="@{/resend-verification}">Resend link</a></div>
+</section></div></main></body></html>

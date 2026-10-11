@@ -1,0 +1,36 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict'),path=require('node:path');
+const source=fs.readFileSync(path.join(__dirname,'../src/main/resources/static/js/site.js'),'utf8');
+const map=new Map();
+function loadPage({pathname='/owner',action='/owner',method='get',navigation='navigate',scroll=0,linkHref=''}={}){
+ const events={}, formEvents={},linkEvents={};
+ const location={pathname,hash:'',href:'https://app.example'+pathname,origin:'https://app.example',search:''};
+ const sessionStorage={getItem:k=>map.get(k)??null,setItem:(k,v)=>map.set(k,String(v)),removeItem:k=>map.delete(k)};
+ const form={getAttribute:k=>k==='method'?method:k==='action'?action:null,checkValidity:()=>true,dataset:{},addEventListener:(n,fn)=>{formEvents[n]=fn}};
+ const link={href:linkHref||location.href,addEventListener:(n,fn)=>{linkEvents[n]=fn}};
+ const window={scrollY:scroll,addEventListener:(name,fn)=>{events[name]=fn},scrollTo:({top})=>{window.scrollY=top}};
+ const document={querySelectorAll:q=>q==='form'?[form]:q==='a[href]'?[link]:[],querySelector:()=>null};
+ const context={window,document,performance:{getEntriesByType:()=>[{type:navigation}]},location,sessionStorage,history:{scrollRestoration:'auto'},URL,Date,Number,String,Set,requestAnimationFrame:fn=>fn(),console};
+ vm.runInNewContext(source,context,{timeout:2000});
+ return {window,formEvents,linkEvents,events,context};
+}
+map.clear();
+let first=loadPage({scroll:1137});
+first.events.scroll();first.formEvents.submit();
+assert.equal(map.get('cholobodlai:pending-post-origin'),'/owner');
+assert.equal(map.get('cholobodlai:scroll:/owner'),'1137');
+let second=loadPage();second.events.load();
+assert.equal(second.window.scrollY,1137);
+assert.equal(map.has('cholobodlai:pending-post-origin'),false);
+console.log('PASS GET filter restores 1137px after same-page navigation');
+map.clear();first=loadPage({method:'post',scroll:780});first.events.scroll();first.formEvents.submit();
+second=loadPage();second.events.load();assert.equal(second.window.scrollY,780);
+console.log('PASS POST form return restores 780px');
+map.clear();first=loadPage({scroll:535});first.events.scroll();second=loadPage({navigation:'reload'});second.events.load();assert.equal(second.window.scrollY,535);
+console.log('PASS browser reload preserves reading position');
+map.clear();first=loadPage({pathname:'/owner',action:'/shipper',scroll:990});first.events.scroll();first.formEvents.submit();
+assert.equal(map.has('cholobodlai:pending-post-origin'),false);
+second=loadPage({pathname:'/shipper'});assert.equal(second.window.scrollY,0);
+console.log('PASS navigating to a different page starts at top');
+map.clear();first=loadPage({pathname:'/owner',scroll:420,linkHref:'https://app.example/owner?pickup=dhaka'});first.events.scroll();first.linkEvents.click();
+assert.equal(map.get('cholobodlai:pending-post-origin'),'/owner');
+console.log('PASS GET query link remembers position');

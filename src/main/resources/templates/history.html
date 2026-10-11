@@ -1,0 +1,15 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/layout :: head('Booking history')}"></head><body class="app-page">
+<header th:replace="~{fragments/layout :: nav}"></header>
+<main class="container dashboard-page"><div class="page-intro"><span class="eyebrow">YOUR ACTIVITY</span><h1>Booking & bid history.</h1><p>Find previous requests, bids, completed deliveries and cancellations. Your records are preserved when an offer closes.</p></div>
+<form class="filter-bar" method="get" th:action="@{/history}"><label for="historyQuery">Search route</label><input id="historyQuery" maxlength="80" name="query" th:value="${query}" placeholder="Pickup or destination"><label for="historyStatus">Status</label><select id="historyStatus" name="status"><option value="ALL">All statuses</option>
+<option th:each="s : ${filterStatuses}" th:value="${s}" th:text="${#strings.replace(s,'_',' ')}" th:selected="${selectedStatus == s}"></option></select><button class="btn btn-secondary btn-small">Apply filters</button></form>
+<section class="content-card"><div class="content-card-header"><div><h2>Saved history</h2><p th:text="${ownerHistory ? 'Offers you have placed and their outcomes.' : 'Your trip requests and final status.'}"></p></div><span class="tag tag-light" th:text="${#lists.size(entries)} + ' items'"></span></div>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Route</th><th>Truck type</th><th>Trip status</th><th th:if="${ownerHistory}">Your bid status</th><th th:if="${ownerHistory}">Bid amount</th><th>View</th></tr></thead><tbody>
+<tr th:each="e : ${entries}"><td><strong th:text="${e.trip.pickupLocation}"></strong><small class="history-destination" th:text="'To ' + ${e.trip.dropoffLocation}"></small></td><td th:text="${e.trip.requestedTypeName}"></td>
+<td><span class="tag tag-light" th:text="${#strings.replace(e.trip.status.name(),'_',' ')}"></span></td>
+<td th:if="${ownerHistory}"><span class="tag" th:classappend="${e.bid.status.name() == 'ACCEPTED' ? ' tag-green' : ' tag-gold'}" th:text="${e.bid.status}"></span></td>
+<td th:if="${ownerHistory}" th:text="'৳ ' + ${e.bid.amount}"></td>
+<td><a class="btn btn-secondary btn-small" th:if="${!ownerHistory or e.trip.status.name() == 'OPEN' or e.bid.status.name() == 'ACCEPTED'}" th:href="@{/trips/{id}(id=${e.trip.id})}">Open →</a>
+<span class="muted" th:if="${ownerHistory and e.trip.status.name() != 'OPEN' and e.bid.status.name() != 'ACCEPTED'}">Closed</span></td></tr>
+<tr th:if="${#lists.isEmpty(entries)}"><td th:colspan="${ownerHistory ? 6 : 4}"><div class="empty-state"><h3>No matching activity</h3><p>Try another search or filter.</p></div></td></tr>
+</tbody></table></div></section></main></body></html>

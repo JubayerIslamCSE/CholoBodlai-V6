@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
-import java.util.List;
 
 @Service
 public class AccountService {
@@ -28,13 +27,16 @@ public class AccountService {
     private final PasswordEncoder encoder;
     private final NotificationService notifications;
     private final EmailDeliveryService emailDelivery;
+    private final EmailVerificationPolicy emailPolicy;
 
     public AccountService(
             UserRepository users,
             TruckRepository trucks,
             TruckTypeRepository types,
-            PasswordEncoder encoder, NotificationService notifications,
-            EmailDeliveryService emailDelivery) {
+            PasswordEncoder encoder,
+            NotificationService notifications,
+            EmailDeliveryService emailDelivery,
+            EmailVerificationPolicy emailPolicy) {
 
         this.users = users;
         this.trucks = trucks;
@@ -42,6 +44,7 @@ public class AccountService {
         this.encoder = encoder;
         this.notifications = notifications;
         this.emailDelivery = emailDelivery;
+        this.emailPolicy = emailPolicy;
     }
 
     @Transactional
@@ -54,27 +57,40 @@ public class AccountService {
             String registrationNo,
             String truckTypeId) {
 
-        if (!emailDelivery.deliveryReady()) {
-            throw new BusinessRuleException("Registration is temporarily unavailable until email delivery is configured");
+        if (emailPolicy.required()
+                && !emailDelivery.deliveryReady()) {
+
+            throw new BusinessRuleException(
+                    "Registration is temporarily unavailable until email delivery is configured"
+            );
         }
+
         if (role != Role.SHIPPER && role != Role.OWNER) {
             throw new BusinessRuleException(
-                    "Choose Shipper or Truck Owner");
+                    "Choose Shipper or Truck Owner"
+            );
         }
 
         MarketplaceRules.accountName(fullName);
         MarketplaceRules.phone(phone);
         MarketplaceRules.password(password);
         MarketplaceRules.email(email);
-        String cleanEmail = email.trim().toLowerCase(Locale.ROOT);
+
+        String cleanEmail = email.trim()
+                .toLowerCase(Locale.ROOT);
+
         if (!users.findByEmailIgnoreCase(cleanEmail).isEmpty()) {
-            throw new BusinessRuleException("This email address is already registered");
+            throw new BusinessRuleException(
+                    "This email address is already registered"
+            );
         }
+
         String cleanPhone = phone.trim();
 
         if (users.findByPhone(cleanPhone).isPresent()) {
             throw new BusinessRuleException(
-                    "Phone number already registered");
+                    "Phone number already registered"
+            );
         }
 
         TruckType type = null;
@@ -88,21 +104,26 @@ public class AccountService {
                     || truckTypeId.isBlank()) {
 
                 throw new BusinessRuleException(
-                        "Truck number and type are required for owners");
+                        "Truck number and type are required for owners"
+                );
             }
 
-            reg = registrationNo.trim().toUpperCase(Locale.ROOT);
+            reg = registrationNo.trim()
+                    .toUpperCase(Locale.ROOT);
+
             MarketplaceRules.registration(reg);
 
             if (trucks.existsByRegistrationNo(reg)) {
                 throw new BusinessRuleException(
-                        "Truck registration number already registered");
+                        "Truck registration number already registered"
+                );
             }
 
             type = types.findById(truckTypeId)
                     .orElseThrow(() ->
                             new ResourceNotFoundException(
-                                    "TruckType", truckTypeId));
+                                    "TruckType", truckTypeId
+                            ));
         }
 
         boolean shipper = role == Role.SHIPPER;
@@ -119,12 +140,14 @@ public class AccountService {
                 .approvalStatus(
                         shipper
                                 ? ApprovalStatus.APPROVED
-                                : ApprovalStatus.PENDING)
+                                : ApprovalStatus.PENDING
+                )
                 .createdAt(now)
                 .approvedAt(shipper ? now : null)
                 .build();
 
         try {
+
             user = users.insert(user);
 
             if (role == Role.OWNER) {
@@ -142,15 +165,23 @@ public class AccountService {
                         .build();
 
                 trucks.insert(truck);
-                for (User admin : users.findByRole(Role.ADMIN)) {
-                    notifications.notify(admin, "New owner registration awaiting approval: " + user.getFullName());
+
+                for (User admin :
+                        users.findByRole(Role.ADMIN)) {
+
+                    notifications.notify(
+                            admin,
+                            "New owner registration awaiting approval: "
+                                    + user.getFullName()
+                    );
                 }
             }
 
         } catch (DuplicateKeyException ex) {
 
             throw new BusinessRuleException(
-                    "Phone or truck number already registered");
+                    "Phone or truck number already registered"
+            );
         }
 
         return user;

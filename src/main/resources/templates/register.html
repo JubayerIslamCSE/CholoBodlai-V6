@@ -1,21 +1,302 @@
-<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Create an account')}"></head><body>
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Create an account')}">
+</head>
+
+<body>
+
 <header th:replace="~{fragments/layout :: nav}"></header>
-<main class="auth-shell"><div class="container auth-layout"><aside class="auth-aside"><span class="eyebrow">START MOVING WITH US</span><h1>The right connection starts here.</h1><p>A marketplace built around your next move, whether you're shipping goods or growing a transport business.</p><div class="auth-perks"><span>✓ Compare transparent bids</span><span>✓ Verified owner onboarding</span><span>✓ Book and manage in one place</span></div></aside>
-<section class="auth-panel"><div class="section-eyebrow">CREATE YOUR ACCOUNT</div><h2>Join CholoBodlai</h2><p class="muted">Already registered? <a th:href="@{/login}">Sign in instead</a></p>
-<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-<form th:action="@{/register}" method="post" enctype="multipart/form-data" data-register-form>
-<div class="form-field"><label for="role">I want to...</label><select id="role" name="role" required><option value="SHIPPER">Book trucks — Shipper</option><option value="OWNER">Offer transport — Truck owner</option></select></div>
-<div class="form-field"><label for="fullName">Full name / business name</label><input id="fullName" name="fullName" placeholder="Enter your name" maxlength="120" required></div>
-<div class="form-grid"><div class="form-field"><label for="phone">Phone number</label><input id="phone" name="phone" placeholder="01XXXXXXXXX" autocomplete="tel" inputmode="numeric" maxlength="11" minlength="11" pattern="01[3-9][0-9]{8}" required></div><div class="form-field"><label for="email">Email address <small>(required for verification and recovery)</small></label><input id="email" type="email" name="email" maxlength="180" placeholder="you@example.com" autocomplete="email" required></div></div>
-<div class="form-field"><label for="password">Password</label><input id="password" name="password" type="password" minlength="10" maxlength="100" placeholder="At least 10 characters" autocomplete="new-password" required></div>
-<div class="truck-inputs" id="ownerFields" hidden><div class="form-section-head"><h3>About your truck</h3><p>One vehicle per owner. We'll review these details before activating your account.</p></div>
-<div class="form-field"><label for="truckRegistrationNo">Registration number</label><input name="truckRegistrationNo" id="truckRegistrationNo" minlength="5" maxlength="35" placeholder="DHK-METRO-11-2345"></div>
-<div class="form-field"><label for="truckTypeId">Vehicle type</label><select name="truckTypeId" id="truckTypeId"><option value="">Choose your truck type</option><option th:each="t : ${truckTypes}" th:value="${t.id}" th:text="${t.name}"></option></select></div>
-<div class="form-field"><label for="truckDocument">Truck document <small>(optional, reviewed by admin)</small></label><input name="truckDocument" id="truckDocument" type="file" accept="image/jpeg,image/png,application/pdf"><small>JPG, PNG or PDF, maximum 5 MB. This stays private to administrators.</small></div>
-<div class="form-field"><label for="truckPhoto">Truck photo <small>(optional, JPG or PNG)</small></label><input name="truckPhoto" id="truckPhoto" type="file" accept="image/jpeg,image/png"><small>Show your vehicle on your private vehicle profile, maximum 5 MB.</small></div>
-<div class="info-strip">All new accounts require email verification. Truck owner accounts also require admin approval before sign-in.</div></div>
-<button class="btn btn-primary btn-full btn-large" type="submit">Create my account <span>↗</span></button>
-<p class="form-footnote">By joining, you agree to use the platform responsibly.</p>
-</form></section></div></main>
-</body></html>
+
+<main class="auth-shell">
+
+    <div class="container auth-layout">
+
+        <aside class="auth-aside">
+
+            <span class="eyebrow">
+                START MOVING WITH US
+            </span>
+
+            <h1>
+                The right connection starts here.
+            </h1>
+
+            <p>
+                A marketplace built around your next move,
+                whether you're shipping goods or growing
+                a transport business.
+            </p>
+
+            <div class="auth-perks">
+                <span>✓ Compare transparent bids</span>
+                <span>✓ Verified owner onboarding</span>
+                <span>✓ Book and manage in one place</span>
+            </div>
+
+        </aside>
+
+        <section class="auth-panel">
+
+            <div class="section-eyebrow">
+                CREATE YOUR ACCOUNT
+            </div>
+
+            <h2>Join CholoBodlai</h2>
+
+            <p class="muted">
+                Already registered?
+                <a th:href="@{/login}">
+                    Sign in instead
+                </a>
+            </p>
+
+            <div th:if="${error}"
+                 class="alert alert-danger"
+                 th:text="${error}">
+            </div>
+
+            <form th:action="@{/register}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  data-register-form>
+
+                <div class="form-field">
+
+                    <label for="role">
+                        I want to...
+                    </label>
+
+                    <select id="role"
+                            name="role"
+                            required>
+
+                        <option value="SHIPPER">
+                            Book trucks — Shipper
+                        </option>
+
+                        <option value="OWNER">
+                            Offer transport — Truck owner
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-field">
+
+                    <label for="fullName">
+                        Full name / business name
+                    </label>
+
+                    <input id="fullName"
+                           name="fullName"
+                           placeholder="Enter your name"
+                           maxlength="120"
+                           required/>
+
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-field">
+
+                        <label for="phone">
+                            Phone number
+                        </label>
+
+                        <input id="phone"
+                               name="phone"
+                               placeholder="01XXXXXXXXX"
+                               autocomplete="tel"
+                               inputmode="numeric"
+                               maxlength="11"
+                               minlength="11"
+                               pattern="01[3-9][0-9]{8}"
+                               required/>
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label for="email">
+                            Email address
+
+                            <small th:if="${emailVerificationRequired}">
+                                (required for verification and recovery)
+                            </small>
+
+                            <small th:unless="${emailVerificationRequired}">
+                                (contact email, not verified)
+                            </small>
+                        </label>
+
+                        <input id="email"
+                               type="email"
+                               name="email"
+                               maxlength="180"
+                               placeholder="you@example.com"
+                               autocomplete="email"
+                               required/>
+
+                    </div>
+
+                </div>
+
+                <div class="form-field">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input id="password"
+                           name="password"
+                           type="password"
+                           minlength="10"
+                           maxlength="100"
+                           placeholder="At least 10 characters"
+                           autocomplete="new-password"
+                           required/>
+
+                </div>
+
+                <div class="truck-inputs"
+                     id="ownerFields"
+                     hidden>
+
+                    <div class="form-section-head">
+
+                        <h3>About your truck</h3>
+
+                        <p>
+                            One vehicle per owner.
+                            We'll review these details
+                            before activating your account.
+                        </p>
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label for="truckRegistrationNo">
+                            Registration number
+                        </label>
+
+                        <input name="truckRegistrationNo"
+                               id="truckRegistrationNo"
+                               minlength="5"
+                               maxlength="35"
+                               placeholder="DHK-METRO-11-2345"/>
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label for="truckTypeId">
+                            Vehicle type
+                        </label>
+
+                        <select name="truckTypeId"
+                                id="truckTypeId">
+
+                            <option value="">
+                                Choose your truck type
+                            </option>
+
+                            <option th:each="t : ${truckTypes}"
+                                    th:value="${t.id}"
+                                    th:text="${t.name}">
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label for="truckDocument">
+                            Truck document
+
+                            <small>
+                                (optional, reviewed by admin)
+                            </small>
+                        </label>
+
+                        <input name="truckDocument"
+                               id="truckDocument"
+                               type="file"
+                               accept="image/jpeg,image/png,application/pdf"/>
+
+                        <small>
+                            JPG, PNG or PDF, maximum 5 MB.
+                            This stays private to administrators.
+                        </small>
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label for="truckPhoto">
+                            Truck photo
+
+                            <small>
+                                (optional, JPG or PNG)
+                            </small>
+                        </label>
+
+                        <input name="truckPhoto"
+                               id="truckPhoto"
+                               type="file"
+                               accept="image/jpeg,image/png"/>
+
+                        <small>
+                            Show your vehicle on your private
+                            vehicle profile, maximum 5 MB.
+                        </small>
+
+                    </div>
+
+                    <div class="info-strip"
+                         th:if="${emailVerificationRequired}">
+
+                        All new accounts require email verification.
+                        Truck owner accounts also require admin
+                        approval before sign-in.
+
+                    </div>
+
+                    <div class="info-strip"
+                         th:unless="${emailVerificationRequired}">
+
+                        Email verification is currently optional.
+                        Truck owners still need admin approval
+                        before sign-in.
+
+                    </div>
+
+                </div>
+
+                <button class="btn btn-primary btn-full btn-large"
+                        type="submit">
+
+                    Create my account
+                    <span>↗</span>
+
+                </button>
+
+                <p class="form-footnote">
+                    By joining, you agree to use
+                    the platform responsibly.
+                </p>
+
+            </form>
+
+        </section>
+
+    </div>
+
+</main>
+
+</body>
+</html>
